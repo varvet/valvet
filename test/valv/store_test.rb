@@ -93,12 +93,14 @@ class StoreTest < Minitest::Test
   def test_each_skips_public_key_entries
     hash = {
       "public_key" => @public_key,
+      "api_key" => Valv::Encrypted.new(ciphertext: "O6wBE5yFRSndxa9u5+ITXtgQY+8XscfcoNCMIZ+Ch3KTNbyyoJaNJ4amVwu6cfRXasmOyRqm"),
       "timeout" => 30
     }
     store = new_store(hash)
     paths = []
     store.each { |path, _value, _store| paths << path }
     refute_includes paths, ["public_key"]
+    assert_includes paths, ["api_key"]
     assert_includes paths, ["timeout"]
   end
 
@@ -116,5 +118,10 @@ class StoreTest < Minitest::Test
     assert store.respond_to?(:timeout)
     assert store.respond_to?(:timeout=)
     refute store.respond_to?(:unknown)
+  end
+
+  def test_raises_for_unknown_keys
+    store = new_store({"timeout" => 30})
+    assert_raises(NoMethodError) { store.unknown }
   end
 end

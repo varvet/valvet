@@ -1,7 +1,16 @@
 # frozen_string_literal: true
 
+require "simplecov"
+SimpleCov.start do
+  command_name "minitest"
+  add_filter "/test/"
+  add_filter "lib/valv/version.rb"
+  track_files "lib/**/*.rb"
+end
+
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "valv"
+Zeitwerk::Loader.eager_load_all
 
 require "minitest/autorun"
 

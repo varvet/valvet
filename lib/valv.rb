@@ -8,6 +8,7 @@ require "base64"
 require "zeitwerk"
 loader = Zeitwerk::Loader.for_gem
 loader.inflector.inflect("yaml" => "YAML")
+loader.ignore("#{__dir__}/valv/version.rb")
 loader.setup
 
 module Valv
