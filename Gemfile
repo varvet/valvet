@@ -5,6 +5,7 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in valv.gemspec
 gemspec
 
+gem "psych"
 gem "irb"
 gem "rake", "~> 13.0"
 
