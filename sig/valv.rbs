@@ -1,4 +1,111 @@
 module Valv
   VERSION: String
-  # See the writing guide of rbs: https://github.com/ruby/rbs#guides
+
+  type base64_encoded = String
+
+  def self.new: (Hash[String, untyped] hash, ?private_keys: Array[base64_encoded]) -> Store
+
+  class Encrypted
+    attr_reader ciphertext: base64_encoded
+
+    def self.new: (ciphertext: base64_encoded) -> Encrypted
+
+    def empty?: () -> bool
+
+    def init_with: (untyped coder) -> void
+
+    def encode_with: (untyped coder) -> void
+  end
+
+  class PublicKey
+    attr_reader key: base64_encoded
+
+    def self.new: (key: base64_encoded) -> PublicKey
+
+    def init_with: (untyped coder) -> void
+
+    def encode_with: (untyped coder) -> void
+  end
+
+  module Error
+    class Base < StandardError
+    end
+
+    class NoDecryptorError < Base
+      attr_reader public_key: base64_encoded
+      attr_reader ciphertext: base64_encoded
+
+      def initialize: (public_key: base64_encoded, ciphertext: base64_encoded) -> void
+    end
+  end
+
+  module Crypto
+    def self.encode: (String data) -> base64_encoded
+
+    def self.decode: (base64_encoded data) -> String
+
+    def self.generate: () -> Decryptor
+
+    class Encryptor
+      def initialize: (base64_encoded public_key) -> void
+
+      def to_s: () -> base64_encoded
+
+      def encrypt: (String plaintext) -> base64_encoded
+    end
+
+    class Decryptor
+      def initialize: (base64_encoded private_key) -> void
+
+      def to_s: () -> base64_encoded
+
+      def public_key: () -> base64_encoded
+
+      def encryptor: () -> Encryptor
+
+      def decrypt: (base64_encoded ciphertext) -> String
+    end
+  end
+
+  class Store
+    class Decrypt
+      attr_reader public_key: base64_encoded
+      attr_reader ciphertext: base64_encoded
+
+      def self.new: (base64_encoded public_key, base64_encoded ciphertext) -> Decrypt
+    end
+
+    class Encrypt
+      attr_reader public_key: base64_encoded
+      attr_reader plaintext: String
+
+      def self.new: (base64_encoded public_key, String plaintext) -> Encrypt
+    end
+
+    def initialize: (Hash[String, untyped] hash, ?public_key: base64_encoded?) { (Store::Decrypt | Store::Encrypt) -> String } -> void
+
+    def key?: (String key) -> bool
+
+    def each: (?path: Array[String]) { (Array[String], untyped, Store) -> void } -> void
+
+    def to_h: () -> Hash[String, untyped]
+
+    def resolve: (String key) -> (String | Store | untyped)
+
+    def to_yaml: (*untyped) -> String
+
+    private
+
+    def assign: (String key, untyped value) -> void
+
+    def decrypt: (Encrypted encrypted) -> String
+
+    def child_scope: (Hash[String, untyped] hash) -> Store
+
+    def find_public_key: (Hash[String, untyped] hash) -> PublicKey?
+  end
+
+  module YAML
+    def self.register: () -> void
+  end
 end

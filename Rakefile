@@ -9,4 +9,9 @@ end
 
 require "standard/rake"
 
-task default: %i[test standard]
+desc "Validate RBS type signatures"
+task "rbs:validate" do
+  sh "bundle exec rbs -I sig validate"
+end
+
+task default: %i[test standard rbs:validate]

@@ -45,3 +45,5 @@ jobs:
           bundler-cache: true
       - name: Standard Ruby
         run: bundle exec rake standard
+      - name: RBS validate
+        run: bundle exec rake rbs:validate
