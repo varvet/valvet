@@ -10,6 +10,7 @@ loader = Zeitwerk::Loader.for_gem
 loader.inflector.inflect("yaml" => "YAML")
 loader.ignore("#{__dir__}/valv/version.rb")
 loader.ignore("#{__dir__}/valv/cli.rb")
+loader.ignore("#{__dir__}/valv/rails.rb")
 loader.setup
 
 module Valv
@@ -31,3 +32,5 @@ module Valv
     end
   end
 end
+
+require "valv/rails" if defined?(Rails::Railtie)

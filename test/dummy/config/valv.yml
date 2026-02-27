@@ -1,0 +1,3 @@
+test:
+  public_key: !public_key cUBo9LUaIdqBlL0ZoE9nrslf89zrXUTE6vEbiZOKp2Q=
+  secret_key_base: !encrypted YzN3xHrLFpHSNUankY+arelS5F01r7lES4QcT2AdyGcapUHW5ApjvqKPO+r1Gj/Bd/UqUDJZQAW6yH7S

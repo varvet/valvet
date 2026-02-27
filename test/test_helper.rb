@@ -5,6 +5,7 @@ SimpleCov.start do
   command_name "minitest"
   add_filter "/test/"
   add_filter "lib/valv/version.rb"
+  add_filter "lib/valv/rails.rb"
   track_files "lib/**/*.rb"
 end
 

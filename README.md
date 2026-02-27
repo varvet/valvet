@@ -1,43 +1,69 @@
 # Valv
 
-TODO: Delete this and the text below, and describe your gem
+Keep secrets in your config files. Valv encrypts sensitive values while leaving everything else readable, so you can check the whole file into version control, just like Rails credentials.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/valv`. To experiment with that code, run `bin/console` for an interactive prompt.
+It uses asymmetric encryption ([NaCl sealed boxes](https://libsodium.gitbook.io/doc/public-key_cryptography/sealed_boxes) via [RbNaCl](https://github.com/RbNaCl/rbnacl)), which means anyone on the team can add new secrets using the public key — without ever needing the private key.
 
-## Installation
-
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
-
-Install the gem and add to the application's Gemfile by executing:
-
-```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
-```
-
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
-```
+Give each environment its own keypair and they can all live in one file, each unable to decrypt the other's secrets.
 
 ## Usage
 
-TODO: Write usage instructions here
+## CLI
+
+Generate a keypair (public key to stdout, private key to stderr):
+
+```bash
+valv keypair                            # prints both, labeled
+valv keypair > public.key 2> private.key  # saves each to a file
+```
+
+Encrypt and decrypt individual values:
+
+```bash
+valv encrypt "my secret" --key public.key
+valv decrypt "ciphertext..." --key private.key
+```
+
+## Config files
+
+Put your config in a YAML file with `!public_key` and `!encrypted` tags:
+
+```yaml
+development:
+  public_key: !public_key cWgtEYZ3bDXYgiHGbanGr+vl4HQrDgiAmOlBRc+hhgo=
+  secret_key_base: !encrypted 7oc+QbPyIa3Oe4ty09tNWRhgkAvlFjyWcggfeRAz8olE5VRF3lNvJEVGs8xgGquoXvItXPWOfus0ntQaUphFEsANyAE=
+  database:
+    password: !encrypted 3ad2zo3NKQU1EZm7XB2uFiqE6wAWjPPqjvPTD8rUB3m+ya2xrE5YvEuxDYkswgxqMjRfm5V1OHyz4cnez0GLUTif1+0=
+
+production:
+  public_key: !public_key R7ljpsyGiOm2Yz3ElbQwCDDapAMEhCHl6WYWS/ep4vM=
+  secret_key_base: !encrypted HWZrJnY+AxBW5+W71Ar6DHkW2clqmtccrcCy5iek+9H4BfYTS1VR5/P3p+YhNzIgd7+MTTJxSTXmGeG9k0CQfoUpnn0=
+  database:
+    password: !encrypted 8Z2QiPc7gKWqTmjs6mlNiKWPJ997ftzgpiMO/NdEEjzAvXAAckYIqeyOxem+OeCsDHsCwM8j2x8XPH/7VM383dmw+jA=
+```
+
+## Rails
+
+Place your config in `config/valv.yml` and set `VALV_PRIVATE_KEY` in your environment. The Railtie is loaded automatically and exposes `Rails.configuration.valv`:
+
+```ruby
+Rails.configuration.valv.secret_key_base
+Rails.configuration.valv.database.password
+```
+
+## Installation
+
+```bash
+bundle add valv
+```
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/valv. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/valv/blob/main/CODE_OF_CONDUCT.md).
+```bash
+bin/setup
+rake          # runs tests, linting, and RBS validation
+```
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the Valv project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/valv/blob/main/CODE_OF_CONDUCT.md).
+[MIT](LICENSE.txt)
