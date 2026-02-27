@@ -14,6 +14,21 @@ Zeitwerk::Loader.eager_load_all
 
 require "minitest/autorun"
 
+module CLIHelper
+  Result = Data.define(:status, :out, :err)
+
+  class FakeTTY < StringIO
+    def tty? = true
+  end
+
+  def cli(argv, out_tty: false, err_tty: false)
+    out = out_tty ? FakeTTY.new : StringIO.new
+    err = err_tty ? FakeTTY.new : StringIO.new
+    status = Valv::CLI.start(argv, out:, err:)
+    Result.new(status:, out: out.string, err: err.string)
+  end
+end
+
 module TestFixtures
   PRIVATE_KEY = "LupoKAFUrJGJGSxOQEH9jSNx4N29oEfkbRiWXsn15QE="
   PUBLIC_KEY = "cUBo9LUaIdqBlL0ZoE9nrslf89zrXUTE6vEbiZOKp2Q="
