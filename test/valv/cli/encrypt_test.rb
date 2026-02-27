@@ -36,4 +36,17 @@ class Valv::CLI::EncryptTest < Minitest::Test
     assert_equal 1, result.status
     assert_match(/--key/, result.err)
   end
+
+  def test_key_from_file
+    keyfile = Tempfile.new("valv-key")
+    keyfile.write(PUBLIC_KEY)
+    keyfile.close
+
+    result = cli(["encrypt", "hello", "--key", keyfile.path])
+    assert_equal 0, result.status
+    plaintext = Valv::Crypto::Decryptor.new(PRIVATE_KEY).decrypt(result.out.strip)
+    assert_equal "hello", plaintext
+  ensure
+    keyfile&.unlink
+  end
 end

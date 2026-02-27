@@ -47,7 +47,7 @@ module Valv
       key = nil
       parser = OptionParser.new do |opts|
         opts.banner = "Usage: valv encrypt VALUE --key PUBLIC_KEY"
-        opts.on("-k", "--key KEY", "Public key (base64)") { |k| key = k }
+        opts.on("-k", "--key KEY", "Public key (base64 or file path)") { |k| key = k }
       end
       parser.parse!(argv)
 
@@ -57,14 +57,14 @@ module Valv
         return 1
       end
 
-      @out.puts Crypto::Encryptor.new(key).encrypt(value)
+      @out.puts Crypto::Encryptor.new(read_key(key)).encrypt(value)
     end
 
     def decrypt(argv)
       key = nil
       parser = OptionParser.new do |opts|
         opts.banner = "Usage: valv decrypt CIPHERTEXT --key PRIVATE_KEY"
-        opts.on("-k", "--key KEY", "Private key (base64)") { |k| key = k }
+        opts.on("-k", "--key KEY", "Private key (base64 or file path)") { |k| key = k }
       end
       parser.parse!(argv)
 
@@ -74,7 +74,11 @@ module Valv
         return 1
       end
 
-      @out.puts Crypto::Decryptor.new(key).decrypt(ciphertext)
+      @out.puts Crypto::Decryptor.new(read_key(key)).decrypt(ciphertext)
+    end
+
+    def read_key(key)
+      File.exist?(key) ? File.binread(key).strip : key
     end
 
     def help(_argv)
