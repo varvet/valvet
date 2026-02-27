@@ -5,19 +5,19 @@ require_relative "lib/valvet/version"
 Gem::Specification.new do |spec|
   spec.name = "valvet"
   spec.version = Valvet::VERSION
-  spec.authors = ["Kim Burgestrand"]
+  spec.authors = ["Kim Burgestrand", "Varvet"]
   spec.email = ["kim@burgestrand.se"]
 
-  spec.summary = "TODO: Write a short summary, because RubyGems requires one."
-  spec.description = "TODO: Write a longer description or delete this line."
-  spec.homepage = "TODO: Put your gem's website or public repo URL here."
+  spec.summary = "Encrypt secrets in your config files using asymmetric encryption"
+  spec.description = "Keep secrets in your config files. Valvet encrypts sensitive values while leaving everything else readable, so you can check the whole file into version control. Uses NaCl sealed boxes via RbNaCl."
+  spec.homepage = "https://github.com/varvet/valvet"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.2.0"
 
-  spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
+  spec.metadata["allowed_push_host"] = "https://rubygems.org"
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "TODO: Put your gem's public repo URL here."
-  spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
+  spec.metadata["source_code_uri"] = "https://github.com/varvet/valvet"
+  spec.metadata["changelog_uri"] = "https://github.com/varvet/valvet/blob/main/CHANGELOG.md"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
