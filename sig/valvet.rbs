@@ -1,4 +1,4 @@
-module Valv
+module Valvet
   VERSION: String
 
   type base64_encoded = String

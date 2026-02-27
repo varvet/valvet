@@ -4,13 +4,13 @@ require "simplecov"
 SimpleCov.start do
   command_name "minitest"
   add_filter "/test/"
-  add_filter "lib/valv/version.rb"
-  add_filter "lib/valv/rails.rb"
+  add_filter "lib/valvet/version.rb"
+  add_filter "lib/valvet/rails.rb"
   track_files "lib/**/*.rb"
 end
 
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
-require "valv"
+require "valvet"
 Zeitwerk::Loader.eager_load_all
 
 require "minitest/autorun"
@@ -25,7 +25,7 @@ module CLIHelper
   def cli(argv, out_tty: false, err_tty: false)
     out = out_tty ? FakeTTY.new : StringIO.new
     err = err_tty ? FakeTTY.new : StringIO.new
-    status = Valv::CLI.start(argv, out:, err:)
+    status = Valvet::CLI.start(argv, out:, err:)
     Result.new(status:, out: out.string, err: err.string)
   end
 end

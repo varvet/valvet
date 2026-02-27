@@ -4,17 +4,17 @@ require "test_helper"
 
 class CryptoTest < Minitest::Test
   def test_generate_returns_decryptor
-    assert_kind_of Valv::Crypto::Decryptor, Valv::Crypto.generate
+    assert_kind_of Valvet::Crypto::Decryptor, Valvet::Crypto.generate
   end
 
   def test_encode_decode_round_trip
     data = "hello"
-    encoded = Valv::Crypto.encode(data)
-    assert_equal data, Valv::Crypto.decode(encoded)
+    encoded = Valvet::Crypto.encode(data)
+    assert_equal data, Valvet::Crypto.decode(encoded)
   end
 
   def test_encode_returns_base64
-    encoded = Valv::Crypto.encode("hello")
+    encoded = Valvet::Crypto.encode("hello")
     assert_match(/\A[A-Za-z0-9+\/]*=*\z/, encoded)
   end
 end

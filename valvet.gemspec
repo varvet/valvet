@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "lib/valv/version"
+require_relative "lib/valvet/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "valv"
-  spec.version = Valv::VERSION
+  spec.name = "valvet"
+  spec.version = Valvet::VERSION
   spec.authors = ["Kim Burgestrand"]
   spec.email = ["kim@burgestrand.se"]
 

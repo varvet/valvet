@@ -1,6 +1,0 @@
-#!/usr/bin/env ruby
-
-require "valv"
-require "valv/cli"
-
-exit Valv::CLI.start(ARGV)

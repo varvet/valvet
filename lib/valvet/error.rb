@@ -1,4 +1,4 @@
-module Valv
+module Valvet
   module Error
     class Base < StandardError
     end

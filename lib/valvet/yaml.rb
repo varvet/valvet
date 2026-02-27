@@ -1,10 +1,10 @@
 require "yaml"
 
-module Valv
+module Valvet
   module YAML
     def self.register
-      ::YAML.add_tag("!encrypted", Valv::Encrypted)
-      ::YAML.add_tag("!public_key", Valv::PublicKey)
+      ::YAML.add_tag("!encrypted", Valvet::Encrypted)
+      ::YAML.add_tag("!public_key", Valvet::PublicKey)
     end
   end
 

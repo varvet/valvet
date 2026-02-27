@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "valv/cli"
+require "valvet/cli"
 
-class Valv::CLITest < Minitest::Test
+class Valvet::CLITest < Minitest::Test
   include CLIHelper
 
   def test_help_with_no_args

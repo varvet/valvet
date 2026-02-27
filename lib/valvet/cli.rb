@@ -2,7 +2,7 @@
 
 require "optparse"
 
-module Valv
+module Valvet
   class CLI
     def self.start(argv, ...)
       new(...).run(argv.dup)
@@ -46,7 +46,7 @@ module Valv
     def encrypt(argv)
       key = nil
       parser = OptionParser.new do |opts|
-        opts.banner = "Usage: valv encrypt VALUE --key PUBLIC_KEY"
+        opts.banner = "Usage: valvet encrypt VALUE --key PUBLIC_KEY"
         opts.on("-k", "--key KEY", "Public key (base64 or file path)") { |k| key = k }
       end
       parser.parse!(argv)
@@ -63,7 +63,7 @@ module Valv
     def decrypt(argv)
       key = nil
       parser = OptionParser.new do |opts|
-        opts.banner = "Usage: valv decrypt CIPHERTEXT --key PRIVATE_KEY"
+        opts.banner = "Usage: valvet decrypt CIPHERTEXT --key PRIVATE_KEY"
         opts.on("-k", "--key KEY", "Private key (base64 or file path)") { |k| key = k }
       end
       parser.parse!(argv)
@@ -83,7 +83,7 @@ module Valv
 
     def help(_argv)
       @out.puts <<~HELP
-        Usage: valv COMMAND [OPTIONS]
+        Usage: valvet COMMAND [OPTIONS]
 
         Commands:
           keypair, g     Generate a new keypair
@@ -91,7 +91,7 @@ module Valv
           decrypt, d     Decrypt a value (requires --key)
           help           Show this help
 
-        Run `valv COMMAND --help` for more information.
+        Run `valvet COMMAND --help` for more information.
       HELP
     end
   end

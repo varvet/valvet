@@ -1,6 +1,6 @@
-# Valv
+# Valvet
 
-Keep secrets in your config files. Valv encrypts sensitive values while leaving everything else readable, so you can check the whole file into version control, just like Rails credentials.
+Keep secrets in your config files. Valvet encrypts sensitive values while leaving everything else readable, so you can check the whole file into version control, just like Rails credentials.
 
 It uses asymmetric encryption ([NaCl sealed boxes](https://libsodium.gitbook.io/doc/public-key_cryptography/sealed_boxes) via [RbNaCl](https://github.com/RbNaCl/rbnacl)), which means anyone on the team can add new secrets using the public key — without ever needing the private key.
 
@@ -13,15 +13,15 @@ Give each environment its own keypair and they can all live in one file, each un
 Generate a keypair (public key to stdout, private key to stderr):
 
 ```bash
-valv keypair                            # prints both, labeled
-valv keypair > public.key 2> private.key  # saves each to a file
+valvet keypair                            # prints both, labeled
+valvet keypair > public.key 2> private.key  # saves each to a file
 ```
 
 Encrypt and decrypt individual values:
 
 ```bash
-valv encrypt "my secret" --key public.key
-valv decrypt "ciphertext..." --key private.key
+valvet encrypt "my secret" --key public.key
+valvet decrypt "ciphertext..." --key private.key
 ```
 
 ## Config files
@@ -44,17 +44,17 @@ production:
 
 ## Rails
 
-Place your config in `config/valv.yml` and set `VALV_PRIVATE_KEY` in your environment. The Railtie is loaded automatically and exposes `Rails.configuration.valv`:
+Place your config in `config/valvet.yml` and set `VALVET_PRIVATE_KEY` in your environment. The Railtie is loaded automatically and exposes `Rails.configuration.valvet`:
 
 ```ruby
-Rails.configuration.valv.secret_key_base
-Rails.configuration.valv.database.password
+Rails.configuration.valvet.secret_key_base
+Rails.configuration.valvet.database.password
 ```
 
 ## Installation
 
 ```bash
-bundle add valv
+bundle add valvet
 ```
 
 ## Development

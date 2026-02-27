@@ -1,4 +1,4 @@
-module Valv
+module Valvet
   module Crypto
     def self.encode(data) = Base64.strict_encode64(data)
     def self.decode(data) = Base64.decode64(data)

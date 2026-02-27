@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in valv.gemspec
+# Specify your gem's dependencies in valvet.gemspec
 gemspec
 
 gem "psych"

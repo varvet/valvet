@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "valv/version"
+require_relative "valvet/version"
 
 require "rbnacl"
 require "base64"
@@ -8,12 +8,12 @@ require "base64"
 require "zeitwerk"
 loader = Zeitwerk::Loader.for_gem
 loader.inflector.inflect("yaml" => "YAML")
-loader.ignore("#{__dir__}/valv/version.rb")
-loader.ignore("#{__dir__}/valv/cli.rb")
-loader.ignore("#{__dir__}/valv/rails.rb")
+loader.ignore("#{__dir__}/valvet/version.rb")
+loader.ignore("#{__dir__}/valvet/cli.rb")
+loader.ignore("#{__dir__}/valvet/rails.rb")
 loader.setup
 
-module Valv
+module Valvet
   def self.new(hash, private_keys: [])
     decryptors = private_keys.to_h do |private_key|
       decryptor = Crypto::Decryptor.new(private_key)
@@ -33,4 +33,4 @@ module Valv
   end
 end
 
-require "valv/rails" if defined?(Rails::Railtie)
+require "valvet/rails" if defined?(Rails::Railtie)

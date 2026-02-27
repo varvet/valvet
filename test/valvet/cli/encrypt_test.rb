@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "valv/cli"
+require "valvet/cli"
 
-class Valv::CLI::EncryptTest < Minitest::Test
+class Valvet::CLI::EncryptTest < Minitest::Test
   include CLIHelper
   include TestFixtures
 
@@ -12,7 +12,7 @@ class Valv::CLI::EncryptTest < Minitest::Test
     assert_equal 0, result.status
     ciphertext = result.out.strip
     refute_empty ciphertext
-    plaintext = Valv::Crypto::Decryptor.new(PRIVATE_KEY).decrypt(ciphertext)
+    plaintext = Valvet::Crypto::Decryptor.new(PRIVATE_KEY).decrypt(ciphertext)
     assert_equal "hello", plaintext
   end
 
@@ -20,7 +20,7 @@ class Valv::CLI::EncryptTest < Minitest::Test
     result = cli(["e", "hello", "-k", PUBLIC_KEY])
     assert_equal 0, result.status
     ciphertext = result.out.strip
-    plaintext = Valv::Crypto::Decryptor.new(PRIVATE_KEY).decrypt(ciphertext)
+    plaintext = Valvet::Crypto::Decryptor.new(PRIVATE_KEY).decrypt(ciphertext)
     assert_equal "hello", plaintext
   end
 
@@ -38,13 +38,13 @@ class Valv::CLI::EncryptTest < Minitest::Test
   end
 
   def test_key_from_file
-    keyfile = Tempfile.new("valv-key")
+    keyfile = Tempfile.new("valvet-key")
     keyfile.write(PUBLIC_KEY)
     keyfile.close
 
     result = cli(["encrypt", "hello", "--key", keyfile.path])
     assert_equal 0, result.status
-    plaintext = Valv::Crypto::Decryptor.new(PRIVATE_KEY).decrypt(result.out.strip)
+    plaintext = Valvet::Crypto::Decryptor.new(PRIVATE_KEY).decrypt(result.out.strip)
     assert_equal "hello", plaintext
   ensure
     keyfile&.unlink

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-module Valv
+module Valvet
   VERSION = "0.1.0"
 end

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "valv/cli"
+require "valvet/cli"
 
-class Valv::CLI::KeypairTest < Minitest::Test
+class Valvet::CLI::KeypairTest < Minitest::Test
   include CLIHelper
 
   def test_piped_outputs_raw_keys
@@ -19,8 +19,8 @@ class Valv::CLI::KeypairTest < Minitest::Test
     result = cli(%w[keypair])
     public_key = result.out.strip
     private_key = result.err.strip
-    ciphertext = Valv::Crypto::Encryptor.new(public_key).encrypt("test")
-    assert_equal "test", Valv::Crypto::Decryptor.new(private_key).decrypt(ciphertext)
+    ciphertext = Valvet::Crypto::Encryptor.new(public_key).encrypt("test")
+    assert_equal "test", Valvet::Crypto::Decryptor.new(private_key).decrypt(ciphertext)
   end
 
   def test_tty_labels_both_and_warns

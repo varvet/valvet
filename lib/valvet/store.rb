@@ -1,4 +1,4 @@
-module Valv
+module Valvet
   class Store
     Decrypt = Data.define(:public_key, :ciphertext)
     Encrypt = Data.define(:public_key, :plaintext)
@@ -14,9 +14,9 @@ module Valv
     def each(path: [], &block)
       @hash.each do |key, value|
         case value
-        when Valv::PublicKey
+        when Valvet::PublicKey
           next
-        when Valv::Encrypted
+        when Valvet::Encrypted
           yield path + [key], value, self
         when Hash
           child_scope(value).each(path: path + [key], &block)
@@ -28,7 +28,7 @@ module Valv
 
     def to_h
       @hash.each_with_object({}) do |(key, value), result|
-        next if value.is_a?(Valv::PublicKey)
+        next if value.is_a?(Valvet::PublicKey)
         result[key] = resolve(key)
         result[key] = result[key].to_h if result[key].is_a?(self.class)
       end
@@ -37,7 +37,7 @@ module Valv
     def resolve(key)
       value = @hash[key]
       case value
-      when Valv::Encrypted then decrypt(value)
+      when Valvet::Encrypted then decrypt(value)
       when Hash then child_scope(value)
       else value
       end
@@ -62,9 +62,9 @@ module Valv
     private
 
     def assign(key, value)
-      if @hash[key].is_a?(Valv::Encrypted)
+      if @hash[key].is_a?(Valvet::Encrypted)
         ciphertext = @handler.call(Encrypt.new(@public_key, value))
-        @hash[key] = Valv::Encrypted.new(ciphertext:)
+        @hash[key] = Valvet::Encrypted.new(ciphertext:)
       else
         @hash[key] = value
       end
@@ -79,7 +79,7 @@ module Valv
     end
 
     def find_public_key(hash)
-      hash.each_value { |v| return v if v.is_a?(Valv::PublicKey) }
+      hash.each_value { |v| return v if v.is_a?(Valvet::PublicKey) }
       nil
     end
   end

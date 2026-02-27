@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "valv/cli"
+require "valvet/cli"
 
-class Valv::CLI::DecryptTest < Minitest::Test
+class Valvet::CLI::DecryptTest < Minitest::Test
   include CLIHelper
   include TestFixtures
 
   def test_outputs_plaintext
-    ciphertext = Valv::Crypto::Encryptor.new(PUBLIC_KEY).encrypt("secret")
+    ciphertext = Valvet::Crypto::Encryptor.new(PUBLIC_KEY).encrypt("secret")
     result = cli(["decrypt", ciphertext, "--key", PRIVATE_KEY])
     assert_equal 0, result.status
     assert_equal "secret", result.out.strip
   end
 
   def test_short_flag
-    ciphertext = Valv::Crypto::Encryptor.new(PUBLIC_KEY).encrypt("secret")
+    ciphertext = Valvet::Crypto::Encryptor.new(PUBLIC_KEY).encrypt("secret")
     result = cli(["d", ciphertext, "-k", PRIVATE_KEY])
     assert_equal 0, result.status
     assert_equal "secret", result.out.strip
@@ -34,18 +34,18 @@ class Valv::CLI::DecryptTest < Minitest::Test
   end
 
   def test_wrong_key_raises
-    ciphertext = Valv::Crypto::Encryptor.new(PUBLIC_KEY).encrypt("secret")
+    ciphertext = Valvet::Crypto::Encryptor.new(PUBLIC_KEY).encrypt("secret")
     assert_raises(RbNaCl::CryptoError) do
       cli(["decrypt", ciphertext, "--key", OTHER_PRIVATE_KEY])
     end
   end
 
   def test_key_from_file
-    keyfile = Tempfile.new("valv-key")
+    keyfile = Tempfile.new("valvet-key")
     keyfile.write(PRIVATE_KEY)
     keyfile.close
 
-    ciphertext = Valv::Crypto::Encryptor.new(PUBLIC_KEY).encrypt("secret")
+    ciphertext = Valvet::Crypto::Encryptor.new(PUBLIC_KEY).encrypt("secret")
     result = cli(["decrypt", ciphertext, "--key", keyfile.path])
     assert_equal 0, result.status
     assert_equal "secret", result.out.strip

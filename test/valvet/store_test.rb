@@ -6,20 +6,20 @@ class StoreTest < Minitest::Test
   include TestFixtures
 
   def setup
-    @decryptor = Valv::Crypto::Decryptor.new(PRIVATE_KEY)
+    @decryptor = Valvet::Crypto::Decryptor.new(PRIVATE_KEY)
     @encryptor = @decryptor.encryptor
-    @public_key = Valv::PublicKey.new(key: PUBLIC_KEY)
+    @public_key = Valvet::PublicKey.new(key: PUBLIC_KEY)
   end
 
   def new_store(hash, &handler)
     handler ||= method(:handle)
-    Valv::Store.new(hash, &handler)
+    Valvet::Store.new(hash, &handler)
   end
 
   def handle(intent)
     case intent
-    when Valv::Store::Decrypt then @decryptor.decrypt(intent.ciphertext)
-    when Valv::Store::Encrypt then @encryptor.encrypt(intent.plaintext)
+    when Valvet::Store::Decrypt then @decryptor.decrypt(intent.ciphertext)
+    when Valvet::Store::Encrypt then @encryptor.encrypt(intent.plaintext)
     end
   end
 
@@ -31,7 +31,7 @@ class StoreTest < Minitest::Test
   def test_decrypts_encrypted_values
     hash = {
       "public_key" => @public_key,
-      "api_key" => Valv::Encrypted.new(ciphertext: "O6wBE5yFRSndxa9u5+ITXtgQY+8XscfcoNCMIZ+Ch3KTNbyyoJaNJ4amVwu6cfRXasmOyRqm")
+      "api_key" => Valvet::Encrypted.new(ciphertext: "O6wBE5yFRSndxa9u5+ITXtgQY+8XscfcoNCMIZ+Ch3KTNbyyoJaNJ4amVwu6cfRXasmOyRqm")
     }
     store = new_store(hash)
     assert_equal "secret", store.api_key
@@ -40,7 +40,7 @@ class StoreTest < Minitest::Test
   def test_resolves_nested_hash_to_store
     hash = {"service" => {"timeout" => 5}}
     store = new_store(hash)
-    assert_kind_of Valv::Store, store.service
+    assert_kind_of Valvet::Store, store.service
     assert_equal 5, store.service.timeout
   end
 
@@ -53,7 +53,7 @@ class StoreTest < Minitest::Test
   def test_to_h_excludes_public_keys
     hash = {
       "public_key" => @public_key,
-      "api_key" => Valv::Encrypted.new(ciphertext: "O6wBE5yFRSndxa9u5+ITXtgQY+8XscfcoNCMIZ+Ch3KTNbyyoJaNJ4amVwu6cfRXasmOyRqm"),
+      "api_key" => Valvet::Encrypted.new(ciphertext: "O6wBE5yFRSndxa9u5+ITXtgQY+8XscfcoNCMIZ+Ch3KTNbyyoJaNJ4amVwu6cfRXasmOyRqm"),
       "timeout" => 30
     }
     store = new_store(hash)
@@ -66,11 +66,11 @@ class StoreTest < Minitest::Test
   def test_assign_encrypts_when_replacing_encrypted_value
     hash = {
       "public_key" => @public_key,
-      "api_key" => Valv::Encrypted.new(ciphertext: "G+psgOQQ5Kq+NxQ15nTfAXIEOexzpa2RYUV69XLn+jtz+8XDN6t5xL1nLsvz/hTtkEUo")
+      "api_key" => Valvet::Encrypted.new(ciphertext: "G+psgOQQ5Kq+NxQ15nTfAXIEOexzpa2RYUV69XLn+jtz+8XDN6t5xL1nLsvz/hTtkEUo")
     }
     store = new_store(hash)
     store.api_key = "new_value"
-    assert_kind_of Valv::Encrypted, hash["api_key"]
+    assert_kind_of Valvet::Encrypted, hash["api_key"]
     assert_equal "new_value", store.api_key
   end
 
@@ -84,16 +84,16 @@ class StoreTest < Minitest::Test
   def test_raises_without_handler
     hash = {
       "public_key" => @public_key,
-      "api_key" => Valv::Encrypted.new(ciphertext: "O6wBE5yFRSndxa9u5+ITXtgQY+8XscfcoNCMIZ+Ch3KTNbyyoJaNJ4amVwu6cfRXasmOyRqm")
+      "api_key" => Valvet::Encrypted.new(ciphertext: "O6wBE5yFRSndxa9u5+ITXtgQY+8XscfcoNCMIZ+Ch3KTNbyyoJaNJ4amVwu6cfRXasmOyRqm")
     }
-    store = Valv::Store.new(hash)
+    store = Valvet::Store.new(hash)
     assert_raises { store.api_key }
   end
 
   def test_each_skips_public_key_entries
     hash = {
       "public_key" => @public_key,
-      "api_key" => Valv::Encrypted.new(ciphertext: "O6wBE5yFRSndxa9u5+ITXtgQY+8XscfcoNCMIZ+Ch3KTNbyyoJaNJ4amVwu6cfRXasmOyRqm"),
+      "api_key" => Valvet::Encrypted.new(ciphertext: "O6wBE5yFRSndxa9u5+ITXtgQY+8XscfcoNCMIZ+Ch3KTNbyyoJaNJ4amVwu6cfRXasmOyRqm"),
       "timeout" => 30
     }
     store = new_store(hash)
