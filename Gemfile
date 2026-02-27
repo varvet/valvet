@@ -15,6 +15,6 @@ gem "standard", "~> 1.3"
 
 gem "simplecov", require: false
 
-gem "rbs"
+gem "rbs", platforms: :mri
 
 gem "rails"
